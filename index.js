@@ -16,7 +16,7 @@ const FACEBOOK_APP_SECRET = '3e204cc512d0a22fbda611f6c7a9a01c';
 passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: 'http://localhost:3000/auth/facebook/callback'
+    callbackURL: 'https://cute-teal-jellyfish-vest.cyclic.app/auth/facebook/callback'
   },
   (accessToken, refreshToken, profile, done) => {
   
@@ -51,5 +51,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log('Server started on http://localhost:3000');
+  console.log('Server started on https://cute-teal-jellyfish-vest.cyclic.app');
 });
