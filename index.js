@@ -10,8 +10,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-const FACEBOOK_APP_ID = '1117311832587930';
-const FACEBOOK_APP_SECRET = '3e204cc512d0a22fbda611f6c7a9a01c';
+const FACEBOOK_APP_ID = '809510587214134';
+const FACEBOOK_APP_SECRET = '88fd575de06482cd6ad5ca232d01a76a';
 
 passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
