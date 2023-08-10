@@ -5,7 +5,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const app = express();
 
 
-app.use(require('express-session')({ secret: 'your_secret_key', resave: true, saveUninitialized: true }));
+app.use(require('express-session')({ secret: '1b87b054228da170aa0f87a201173a94', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
