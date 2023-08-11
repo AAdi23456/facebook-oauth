@@ -1,23 +1,37 @@
-const axios = require('axios');
+const { default: axios } = require('axios');
+/*
+Variables to replace
+YOUR_API_KEY => The unique identifier for a Gupshup account.
+YOUR_APP_ID=> The unique identifier for an app. An app's appid can be found in the cURL request generated on the dashboard.
+*/
+const sendMessage = (msg, phone) => {
+    const params = new URLSearchParams()
+    params.append('destination', phone);
+    params.append('message', msg);
+    params.append('source', 'GSDSMS'); 
 
-const apiKey = 'cvwnt7rzukuhrigy9wkhlpy8vwvtaxnh';
-const phone = '918210523156';
-const message = 'Hello from Gupshup SMS!';
+    const config = {
+        headers: {
+            'apikey': "cvwnt7rzukuhrigy9wkhlpy8vwvtaxnh",
+            
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    }
 
-const apiUrl = 'https://api.gupshup.io/sm/api/v1/msg';
+    axios.post('http://api.gupshup.io/sms/v1/message/:a9153eb6-e179-4f1b-99b1-4aa2cc3d2ef2', params, config)
+        .then((result) => {
+            console.log('Message sent');
+            console.log(result);
+           // callbackFunc(result.data);
+        })
+        .catch((err) => {
+            console.log(err);
 
-const headers = {
-  'Cache-Control': 'no-cache',
-  'Content-Type': 'application/x-www-form-urlencoded',
-  'apikey': apiKey
-};
+           // callbackFunc(err);
+        })
+}
 
-const data = `channel=sms&source=8210523156&destination=${phone}&message=${message}`;
-
-axios.post(apiUrl, data, { headers })
-  .then(response => {
-    console.log('SMS sent successfully:', response);
-  })
-  .catch(error => {
-    console.error('Error sending SMS:', console.log(error));
-  });
+sendMessage("hello","+918210523156")
+// module.exports = {
+//     sendMessage
+// }

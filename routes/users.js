@@ -1,12 +1,13 @@
 const express = require("express")
-const Authorization = express.Router()
+const Routers = express.Router()
 const bcrypt = require("bcrypt")
 const UserModel = require("../models/users")
 const jwt = require("jsonwebtoken")
-
-Authorization.post("/register", async (req, res) => {
+let otp=0
+Routers.post("/register", async (req, res) => {
   try {
     const { Name,Phone,Email } = req.body
+    console.log(req.body);
     const isEmailexist=await UserModel.findOne({Email})
     const isphoneExist=await UserModel.findOne({Phone})
     if(isEmailexist){
@@ -23,35 +24,102 @@ Authorization.post("/register", async (req, res) => {
    return res.status(500).json({message:"internal server error"})
   }
 });
-Authorization.post("/login", async (req, res) => {
-  const { email, password } = req.body
+Routers.post("/login", async (req, res) => {
+  
   try {
-    const user = await reg_model.findOne({ email })
+    const { Phone,userotp } = req.body
+    if(otp!=userotp){
+      return res.status(200).json({msg: "invalid otp"} )
+    }
+    const user = await UserModel.findOne({ Phone })
     console.log(user);
     if(!user){
-      return res.status(200).json({"msg": "Please regeister first"} )
+      return res.status(200).json({msg: "Please regeister first"} )
     }
-    
-      bcrypt.compare(password, user.password, (err, result) => {
-        console.log(err);
-        console.log(password);
 
-        if (!result) {
-         return res.status(400).json({ "msg": "Wrong Credentials" })
-        
-        }
-        return  res.status(200).json({ "msg": "Login successfull!", "token": jwt.sign({ "email": user.email }, "masai"),"name":user.name})
-      });
-    
-    
+    if(!user.Phone||!user.Email||!user.Name){
+      return res.status(400).json({msg:"please complete your regestartion process"})
+    }
+    return  res.status(200).json({ msg: "Login successfull!", "token": jwt.sign({ "phone": user.Phone ,"name":user.Name,"email":user.Email}, "token_key"),})
   } catch (err) {
-    res.status(400).json({ "msg": err.message })
+    res.status(500).json({ "msg": err.message })
     
+  }
+})
+Routers.post("/sendotp",(req,res)=>{
+  try {
+      const {Phone}=req.body
+      otp=generateOTP()
+      otpservice(Phone,otp)
+      return res.status(200).json({msg:"otp sent"})
+  } catch (error) {
+    return res.status(500).json({message:"internal server error"})
+  }
+})
+Routers.post("/verifyotp", async (req, res) => {
+  try {
+    const { userotp, phone } = req.body;
+
+    
+    if (otp !== userotp) {
+      return res.status(200).json({ msg: "invalid otp" });
+    }
+
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { Phone: phone },
+      { isverified: true },
+      { new: true }
+    );
+
+    if (updatedUser) {
+      return res.status(200).json({ msg: "otp verified" });
+    } else {
+      return res.status(404).json({ msg: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({ message: "internal server error" });
+  }
+});
+
+Routers.get("/data",(req,res)=>{
+  try {
+    const {token}=req.headers
+    const decoded =jwt.verify(token,"token_key")
+    console.log(decoded);
+    res.status(200).json({data:{phone:decoded.phone,Name:decoded.name,Email:decoded.email}})
+  } catch (error) {
+    return res.status(500).json({message:"internal server error"})
   }
 })
 
 
+function generateOTP() {
+  const length = 6;
+  const charset = '0123456789';
+  let otp = '';
 
-module.exports =  Authorization
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    otp += charset[randomIndex];
+  }
+
+  return otp;
+}
+
+function otpservice(Number, otp) {
+  const client = require('twilio')("ACf733b968d6d907644087d00b3a6f57a5", "66beb6cada7bc2bb23edc80f22a41c0c");
+
+  client.messages
+    .create({
+      body: `Your OTP is ${otp}`,
+      from: '+13135137497',
+      to: `+91${Number}`
+    })
+    .then(message => console.log(message.sid))
+    .catch(error => console.error('Error sending OTP:', error));
+}
+
+module.exports =  Routers
 
 
