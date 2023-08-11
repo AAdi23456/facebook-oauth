@@ -49,11 +49,11 @@ Routers.post("/login", async (req, res) => {
 Routers.post("/sendotp",(req,res)=>{
   try {
    
-      const {Phone}=req.body
-      if(!Phone){
+      const {phone}=req.body
+      if(!phone){
         return res.status(400).json({msg:"please provide the phone no"})
       }
-     const phone=Phone
+    
       otp=generateOTP()
       otpservice(phone,otp)
       return res.status(200).json({msg:"otp sent"})
