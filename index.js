@@ -4,10 +4,12 @@ const froute=require('./Oauth/facebook')
 const otproute=require("./routes/otp")
 const usersroute=require("./routes/users")
 const app = express();
+const cors=require("cors")
 const session = require('express-session'); // Import express-session
 const passport = require('passport');
 const {connection}=require("./Database/Mongodb")
 app.use(express.json())
+app.use(cors())
 //app.use("/auth",groute)
 app.use("/auth",froute)
 app.use("/otp",otproute)
