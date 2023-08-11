@@ -55,7 +55,10 @@ Routers.post("/sendotp",(req,res)=>{
       }
     
       otp=generateOTP()
-      otpservice(phone,otp)
+      const check=otpservice(phone,otp)
+      if(!check){
+        return res.status(200).json({msg:check})
+      }
       return res.status(200).json({msg:"otp sent"})
   } catch (error) {
     return res.status(500).json({message:"internal server error"})

@@ -27,7 +27,7 @@ app.use("/users",usersroute)
        
     });
 
-    app.listen(3000, () => {
+    app.listen(4000, () => {
       connection()
         console.log('Server started on https://cute-teal-jellyfish-vest.cyclic.app');
     });
