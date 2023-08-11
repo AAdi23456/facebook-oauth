@@ -46,7 +46,7 @@ Routers.post("/login", async (req, res) => {
     
   }
 })
-Routers.post("/sendotp",(req,res)=>{
+Routers.post("/sendotp",async(req,res)=>{
   try {
    
       const {phone}=req.body
@@ -55,10 +55,8 @@ Routers.post("/sendotp",(req,res)=>{
       }
     
       otp=generateOTP()
-      const check=otpservice(phone,otp)
-      if(!check){
-        return res.status(200).json({msg:check})
-      }
+      const check= otpservice(phone,otp)
+     console.log(check);
       return res.status(200).json({msg:"otp sent"})
   } catch (error) {
     return res.status(500).json({message:"internal server error"})
