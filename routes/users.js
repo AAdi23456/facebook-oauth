@@ -49,7 +49,7 @@ Routers.post("/login", async (req, res) => {
 Routers.post("/sendotp",(req,res)=>{
   try {
    
-      const {Phone}=req.body
+      const {Phone}=req.body.phone
       if(!Phone){
         return res.status(400).json({msg:"please provide the phone no"})
       }
