@@ -49,12 +49,13 @@ Routers.post("/login", async (req, res) => {
 Routers.post("/sendotp",(req,res)=>{
   try {
    
-      const {Phone}=req.body.phone
+      const {Phone}=req.body
       if(!Phone){
         return res.status(400).json({msg:"please provide the phone no"})
       }
+     const phone=Phone
       otp=generateOTP()
-      otpservice(Phone,otp)
+      otpservice(phone,otp)
       return res.status(200).json({msg:"otp sent"})
   } catch (error) {
     return res.status(500).json({message:"internal server error"})
