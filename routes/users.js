@@ -108,7 +108,7 @@ function generateOTP() {
 }
 
 function otpservice(Number, otp) {
-  const client = require('twilio')("ACf733b968d6d907644087d00b3a6f57a5", "66beb6cada7bc2bb23edc80f22a41c0c");
+  const client = require('twilio')(process.env.id, process.env.pass);
 
   client.messages
     .create({
